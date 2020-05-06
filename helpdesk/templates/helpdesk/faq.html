@@ -1,0 +1,36 @@
+{%extends 'helpdesk/father_frame.html'%}
+{%block contents%}
+	<section class="section-one-class" id="section-one-id">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<a href="#" onclick="history.back();return false;" class="toback">Назад</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div id="accordion">
+						{%for question in questions%}
+						<div class="card">
+							<div class="card-header" id="heading{{forloop.counter}}">
+								<h5 class="mb-0">
+									<button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+										{{question.question}}
+									</button>
+								</h5>
+							</div>
+
+							<div id="collapse{{forloop.counter}}" class="collapse" aria-labelledby="heading{{forloop.counter}}" data-parent="#accordion">
+								<div class="card-body">
+									{{question.answer}}
+								</div>
+							</div>
+						</div>
+						{%endfor%}
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+{%endblock%}

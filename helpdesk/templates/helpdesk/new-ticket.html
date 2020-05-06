@@ -1,0 +1,67 @@
+{%extends 'helpdesk/father_frame.html'%}
+{%block contents%}
+{%load static%}
+	<script src="{%static 'js/jqueri-ui.js'%}"></script>
+	<script>
+	$( function() {
+			$( "#datepicker" ).datepicker();
+		} );
+</script>
+	<section class="section-two-class" id="section-two-id">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<a href="#" onclick="history.back();return false;" class="toback">Назад</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg d-flex justify-content-center">
+					<form action="{%url 'helpdesk:send_ticket'%}" method="POST" class="log clients__form review-form" id="popupMessage">
+						<h3 class="log__title">Новая заявка</h3>
+						<div class="log__wrap">
+							<div class="log__group">
+							{% csrf_token %}
+								<!--<label>Имя</label>
+								<input type="text" name="name" class="log__input">
+							</div>
+							<div class="log__group">-->
+								<label>Тема (проблема)</label>
+								<input type="text" name="theme" class="log__input">
+							</div>
+							<div class="log__inner-wrap">
+								<div class="log__group">
+									<label>Отдел</label>
+									<select name="division" form="popupMessage">
+										{%for dep in departments%}
+										<option value="{{dep.pk}}">{{dep.name}}</option>
+										{%endfor%}
+									</select>
+								</div>
+								<div class="log__group">
+									<label>Место (кабинет)</label>
+									<input type="text" name="room" class="log__input">
+								</div>
+								<div class="log__group log__group_socials">
+									<label>Срок</label>
+									<input type="text" name="date" id="datepicker">
+								</div>
+							</div>
+
+							<div class="log__group log__group_textarea">
+								<label>Опишите проблему</label>
+								<textarea type="text" name="message" class="log__input"></textarea>
+							</div>
+						</div>
+						<div class="log__btn">
+							<input id="send" type="submit" data-submit value="Отправить" class="btn btn_send"/>
+						</div>
+
+					</form>
+
+
+				</div>
+			</div>
+			
+		</div>
+	</section>	
+{%endblock%}

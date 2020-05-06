@@ -1,0 +1,107 @@
+{%extends 'helpdesk/father_frame.html'%}
+{%block contents%}
+	<section class="section-two-class" id="section-two-id">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<a href="#" onclick="history.back();return false;" class="toback">Назад</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 d-flex justify-content-center">
+					<ul class="list-tickets">
+						<li class="wr-label d-flex justify-content-between">
+							<div class="label-name_ticket label-name_ticket-view">
+								<p># заявки</p>
+							</div>
+							<div class="label-text_ticket label-text_ticket-view">
+								<p>Тема</p>
+							</div>
+						</li>
+						{%for ticket in tickets%}
+							<li class="wr-tickets">
+							<a href="{%url 'helpdesk:view_ticket' ticket.pk%}" class="d-flex justify-content-between">
+									<div class="ticket-name ticket-name_view">
+										<p>{{ticket.pk}}</p>
+									</div>
+									<div class="ticket-text ticket-text_view">
+										<p>{{ticket.theme}}</p>
+									</div>
+								</a>
+							</li>
+						{%endfor%}
+					</ul>
+				</div>
+				<div class="col-lg-8 d-flex justify-content-end">
+					<form  method="POST" action="{%url 'helpdesk:finish_ticket' obj.pk%}" class="log clients__form review-form" id="popupMessage">
+						{% csrf_token %}
+						<h3 class="log__title">Заявка</h3>
+						<div class="log__wrap">
+							<div class="log__group">
+								<label>Приступил к выполнению:</label>
+								<p class="log__input">
+									{%if obj.worker.first_name == NULL%}Ожидается{%else%}{{obj.worker.first_name}} {{obj.worker.last_name}}{%endif%}
+								</p>
+							</div>
+							<div class="log__group">
+								<label>Тема (проблема):</label>
+								<p class="log__input">
+									{{obj.theme}}
+								</p>
+							</div>
+							<div class="log__inner-wrap">
+								<div class="log__group">
+									<label>Отдел:</label>
+									<p class="log__input">
+										{{obj.targeted_department.name}}
+									</p>
+								</div>
+								<div class="log__group">
+									<label>Место (кабинет):</label>
+									<p class="log__input">
+										{{obj.place}}
+									</p>
+								</div>
+								<div class="log__group log__group_socials">
+									<label>До:</label>
+									<p class="log__input">
+										{%if obj.priority == 0%}{%endif%}{%if obj.priority == 2%}{%endif%}{%if obj.priority == 1%}{%endif%}
+										{{obj.exp_date.day}}/{{obj.exp_date.month}}/{{obj.exp_date.year}}
+									</p>
+								</div>
+							</div>
+							<div class="log__group log__group_textarea">
+								<label>Описание проблемы:</label>
+								<p class="log__input">
+									{{obj.details}}
+								</p>
+							</div>
+						</div>
+						{%if obj.worker.first_name == NULL%}
+							<input id="reject" name="result" type="submit" data-submit value="Удалить" class="btn btn_del"/>
+						{%else%}
+							<input id="agree" name="result" type="submit" data-submit value="Засчитать" class="btn btn_agree"/>
+						{%endif%}
+					</form>
+				</div>
+			</div>--
+			<div class="row">
+				<div class="col-lg">
+					<div class="chat-window">
+						{%for chat_message,who_sent in chat%}
+						<div class="user_{%if who_sent == 0%}self{%endif%}{%if who_sent == 1%}different{%endif%}">{{chat_message}}</div>
+						<br>
+						{%endfor%}
+					</div>
+					<form action="{%url 'helpdesk:send_ticket_message'%}" method="POST" class="form-chat d-flex">
+						{% csrf_token %}
+						<textarea name="chat-message" placeholder="Введите текст" required></textarea>
+						<input type="hidden" name="ticket_num" value="{{obj.pk}}">
+						<input type="hidden" name="user_type" value="user">
+						<button type="submit" class="chat-send"></button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>	
+{%endblock%}
